@@ -2,7 +2,7 @@ from PIL import Image
 from Pixel import Pixel
 
 MONITOR_WIDTH = 21.25
-MONITOR_HEIGHT = 16
+MONITOR_HEIGHT = 14.5
 
 def get_code_from_file(file_path: str, num_monitors_wide: int, num_monitors_tall: int) -> str:
     w, h = int(MONITOR_WIDTH * num_monitors_wide)-6, int(MONITOR_HEIGHT * num_monitors_tall)-6
