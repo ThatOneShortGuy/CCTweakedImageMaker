@@ -1,5 +1,5 @@
 __pycache__
 .vscode
-*.jpg
-*.png
-*.lua
+/*.jpg
+/*.png
+/*.lua
