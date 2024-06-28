@@ -1,3 +1,4 @@
 pillow
 pyperclip
 scikit-learn
+opencv-python
