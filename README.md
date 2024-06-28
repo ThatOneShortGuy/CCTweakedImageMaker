@@ -10,16 +10,18 @@ git clone https://github.com/ThatOneShortGuy/CCTweakedImageMaker.git
 ```bash
 pip install -r requirements.txt
 ```
-3. Run the program
+
+## Usage
+1. Run the program on your real computer
 ```bash
 python main.py <image_path> <num_monitors_wide> <num_monitors_tall>
 ```
-4. Paste the code into [pastebin](https://pastebin.com/)
-5. Run the command `pastebin get <code> <filename>` in your Minecraft computer. For example:
+2. Paste the code into [pastebin](https://pastebin.com/)
+3. Run the command `pastebin get <code> <filename>` in your Minecraft computer. For example:
 ```bash
 pastebin get 123456789 my_cute_cat
 ```
-6. Run the program/image on the computer. For example:
+4. Run the program/image on the computer. For example:
 ```bash
 my_cute_cat
 ```
