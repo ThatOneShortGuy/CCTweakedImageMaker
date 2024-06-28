@@ -2,7 +2,7 @@
 This program allows you to take any image and create the code needed to display it on the [CC: Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked) monitors. The program will copy it to your clipboard, as well as save it to a file. Then you can put the code into [pastebin](https://pastebin.com/) and get it in-game with the `pastebin get` command.
 
 ## Installation
-1. Clone the repository
+1. Clone the repository on your actual computer
 ```bash
 git clone https://github.com/ThatOneShortGuy/CCTweakedImageMaker.git
 ```
@@ -15,7 +15,11 @@ pip install -r requirements.txt
 python main.py <image_path> <num_monitors_wide> <num_monitors_tall>
 ```
 4. Paste the code into [pastebin](https://pastebin.com/)
-5. Run the command `pastebin get <code> <filename>` in Minecraft
-ex. `pastebin get 123456789 image`
-6. Run the program on the computer.
-ex. `image`
+5. Run the command `pastebin get <code> <filename>` in your Minecraft computer. For example:
+```bash
+pastebin get 123456789 my_cute_cat
+```
+6. Run the program/image on the computer. For example:
+```bash
+my_cute_cat
+```
