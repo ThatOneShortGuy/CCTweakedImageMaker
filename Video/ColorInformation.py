@@ -4,6 +4,8 @@ from typing import Iterable
 import numpy as np
 from numpy.typing import NDArray
 
+from .Serializable import Serializable
+
 
 @dataclass
 class Colors:
@@ -12,7 +14,7 @@ class Colors:
     blue: int
 
 @dataclass
-class ColorInformation:
+class ColorInformation(Serializable):
     colors: Iterable[Colors]
 
     @classmethod

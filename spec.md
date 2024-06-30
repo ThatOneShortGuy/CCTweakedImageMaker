@@ -2,13 +2,13 @@
 It will be broken up into 2 main sections: the [header](#header) and the [body](#body). The [header](#header) will contain the metadata about the video, such as the version, dimensions, and frame rate. The [body](#body) will contain the actual video data.
 
 # Header
-The header will first contain a magic string to identify the file as a video file. This will be the string `ccvid`. Immediately following the magic string will be the version number of the codec. The version will be human readable in the format `ab`, where `a` is the major version and `b` is the minor version (ex. 12). It will be followed by the dimensions of the video `wh` where `w` is the width as a 4 byte unsigned integer and `h` is the height as a 4 byte unsigned integer. The frame rate will be the next field, as a 4 byte float. The header will end with a newline character.
+The header will first contain a magic string to identify the file as a video file. This will be the string `ccvid`. Immediately following the magic string will be the version number of the codec. The version will be human readable in the format `ab`, where `a` is the major version and `b` is the minor version (ex. 12). It will be followed by the dimensions of the video `wh` where `w` is the width as a 2 byte unsigned integer and `h` is the height as a 2 byte unsigned integer. The frame rate will be the next field, as a 4 byte float.
 
-`{magic string}{version}{width}{height}{frame rate}\n`
+`ccvid{version}{width}{height}{frame rate}`
 
 # Body
 The body contains a series of [frames](#frame). The frames will be concatenated together in the order they appear in the video:
-`{frame1}}{frame2}...{frameN}`
+`{frame1}{frame2}...{frameN}`
 
 # Frame
 A frame consists of 2 parts: the [color information](#color-information) and the [frame data](#frame-data).
@@ -26,7 +26,7 @@ The frame's data is to be compressed by this codec's [standard compression](#sta
 ```
 
 # Standard Compression
-It will be the XOR diff from the previous frame compressed with [Run Length Encoding](https://en.wikipedia.org/wiki/Run-length_encoding) (RLE). This implementation of RLE is simple: `{count}{char}` where count is a single byte and char is a single byte.
+It will be the XOR diff from the previous frame compressed with [Run Length Encoding](https://en.wikipedia.org/wiki/Run-length_encoding) (RLE). This implementation of RLE is simple: `{count}{char}` where count is 4 bits and char is the other 4 bits  .
 
 # Initial Frame
 The first frame will be an imaginary black frame where the colors are:

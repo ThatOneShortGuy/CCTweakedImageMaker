@@ -1,5 +1,7 @@
 from typing import Protocol
+from abc import abstractmethod
 
 class Serializable(Protocol):
-    def serialize(self) -> bytes: # type: ignore
-        pass
+    @abstractmethod
+    def serialize(self) -> bytes:
+        ...

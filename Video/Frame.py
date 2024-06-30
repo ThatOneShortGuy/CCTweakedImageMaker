@@ -7,10 +7,11 @@ from compute import get_code_from_ndarray
 
 from .ColorInformation import ColorInformation
 from .FrameData import FrameData
+from .Serializable import Serializable
 
 
 @dataclass
-class Frame:
+class Frame(Serializable):
     color_information: ColorInformation
     frame_data: FrameData
 

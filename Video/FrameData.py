@@ -3,9 +3,10 @@ from typing import Iterable
 
 import numpy as np
 
+from .Serializable import Serializable
 
 @dataclass
-class FrameData:
+class FrameData(Serializable):
     pixels: str
 
     @classmethod
