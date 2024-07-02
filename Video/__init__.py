@@ -4,3 +4,4 @@ from .Header import Header
 from .Frame import Frame
 from .ColorInformation import ColorInformation
 from .FrameData import FrameData
+from .Compression import compress

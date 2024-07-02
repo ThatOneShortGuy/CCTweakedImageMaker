@@ -1,5 +1,9 @@
-# Codec Specification
+# Codec Specification 0.1
 It will be broken up into 2 main sections: the [header](#header) and the [body](#body). The [header](#header) will contain the metadata about the video, such as the version, dimensions, and frame rate. The [body](#body) will contain the actual video data.
+
+All byte order is little endian.
+
+The files produced will have the extension `.ccv` (for "ComputerCraft Video").
 
 # Header
 The header will first contain a magic string to identify the file as a video file. This will be the string `ccvid`. Immediately following the magic string will be the version number of the codec. The version will be human readable in the format `ab`, where `a` is the major version and `b` is the minor version (ex. 12). It will be followed by the dimensions of the video `wh` where `w` is the width as a 2 byte unsigned integer and `h` is the height as a 2 byte unsigned integer. The frame rate will be the next field, as a 4 byte float.
@@ -12,21 +16,24 @@ The body contains a series of [frames](#frame). The frames will be concatenated 
 
 # Frame
 A frame consists of 2 parts: the [color information](#color-information) and the [frame data](#frame-data).
+```
+{color information}{frame data}
+```
 
 ## Color Information
-The frame will first contain color information. It will be compressed by this codec's [standard compression](#standard-compression). There are always 16 different colors that can be used. The colors will be stored in the following format:
+There are always 16 different colors that can be used. The colors will be stored in the following format:
 `{color1}{color2}...{color16}`
 
-Where each color is a 3 byte RGB value.
+Where each color is a 3 byte RGB value. (uncompressed for now)
 
 ## Frame Data
-The frame's data is to be compressed by this codec's [standard compression](#standard-compression). Each pixel is half a byte, so 2 pixels are stored in a single byte. The pixels are stored in [row major order](https://en.wikipedia.org/wiki/Row-_and_column-major_order). Example of a 3x3 image with [initial colors](#initial-frame):
+Each pixel is half a byte, so 2 pixels are stored in a single byte. The data will be compressed together using [standard compression](#standard-compression). The pixels are stored in [row major order](https://en.wikipedia.org/wiki/Row-_and_column-major_order). Example of a 3x3 image with [initial colors](#initial-frame):
 ```
 433303ddd
 ```
 
 # Standard Compression
-It will be the XOR diff from the previous frame compressed with [Run Length Encoding](https://en.wikipedia.org/wiki/Run-length_encoding) (RLE). This implementation of RLE is simple: `{count}{char}` where count is 4 bits and char is the other 4 bits  .
+It will be the XOR diff from the previous frame compressed with [Run Length Encoding](https://en.wikipedia.org/wiki/Run-length_encoding) (RLE). This implementation of RLE is simple: `{count}{char}` where count is 4 bits and char is the other 4 bits. With this implementation, the maximum run length is 16. The worst case scenario will also only result in the same size as the original raw data.
 
 # Initial Frame
 The first frame will be an imaginary black frame where the colors are:

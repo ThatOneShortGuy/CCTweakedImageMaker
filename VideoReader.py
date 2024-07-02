@@ -4,8 +4,10 @@ from Video import Frame, Header
 from Video import Video
 
 class VideoReader:
-    def __init__(self, filepath: str):
+    def __init__(self, filepath: str, output_width: int, output_height: int):
         self.filepath = filepath
+        self.output_width = output_width
+        self.output_height = output_height
         self._cap: Optional[cv.VideoCapture] = None
 
     def __iter__(self):
@@ -17,6 +19,7 @@ class VideoReader:
         ret, frame = self._cap.read()
         if not ret:
             raise StopIteration
+        frame = cv.resize(frame, (self.output_width, self.output_height))
         frame = cv.cvtColor(frame, cv.COLOR_BGR2RGB)
         return Frame.from_ndarray(frame) # type: ignore
     
@@ -40,10 +43,10 @@ class VideoReader:
             raise Exception("VideoReader is not opened. Use 'with' statement to open the video file.")
         return self._cap.get(cv.CAP_PROP_FPS)
     
-    def get_header(self) -> Header:
-        w, h = self.get_dimensions()
-        fps = self.get_framerate()
-        return Header(0, w, h, fps)
+    def get_num_frames(self):
+        if self._cap is None:
+            raise Exception("VideoReader is not opened. Use 'with' statement to open the video file.")
+        return int(self._cap.get(cv.CAP_PROP_FRAME_COUNT))
     
-    def get_video(self) -> Video:
-        return Video(self.get_header(), self)
+    def get_video_from_header(self, header: Header) -> Video:
+        return Video(header, self)

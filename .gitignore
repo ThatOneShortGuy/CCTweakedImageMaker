@@ -3,4 +3,7 @@ __pycache__
 /*.jpg
 /*.png
 /*.lua
+*.mp4
+*.mkv
 *.ipynb
+*.ccv
