@@ -3,7 +3,7 @@ import os
 
 import pyperclip
 
-from compute import get_code_from_file
+from src.compute import get_code_from_file
 
 if __name__ == '__main__':
     if len(sys.argv) < 4:

@@ -1,9 +1,9 @@
 import sys
-from VideoReader import VideoReader
+from src.VideoReader import VideoReader
 from typing import Optional
-from Video import Header
+from src.Video import Header
 
-from compute import get_output_width, get_output_height
+from src.compute import get_output_width, get_output_height
 
 DEBUG = bool(sys.gettrace())
 

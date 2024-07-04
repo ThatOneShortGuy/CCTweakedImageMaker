@@ -1,6 +1,6 @@
 import sys
 
-from Video import Frame, FrameData, Header
+from src.Video import Frame, FrameData, Header
 
 filename = "sample.ccv"
 
