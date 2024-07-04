@@ -1,8 +1,7 @@
-from PIL import Image
-from sklearn.cluster import KMeans
 import numpy as np
 from numpy.typing import NDArray
-import numpy as np
+from PIL import Image
+from sklearn.cluster import KMeans
 
 MONITOR_WIDTH = 21.25
 MONITOR_HEIGHT = 14.5

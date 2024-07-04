@@ -1,39 +1,54 @@
-from dataclasses import dataclass
-from typing import BinaryIO, Iterable
+from typing import BinaryIO
 
 import numpy as np
+from numba import njit, uint8, vectorize
+from numba.experimental import jitclass
+from numpy.typing import NDArray
 
-from .Serializable import Serializable
-from .Compression import xor
+@vectorize(['u1(u1, u1)'], target='cpu')
+def xor(a: NDArray[np.uint8], b: NDArray[np.uint8]) -> NDArray[np.uint8]:
+    return a ^ b
 
-@dataclass
-class FrameData(Serializable):
-    pixels: str
+@njit('u1[:](u8, u8)')
+def default(width: int, height: int):
+    return np.zeros(height * width, dtype=np.uint8)+np.uint8(15)
 
-    @classmethod
-    def from_label(cls, labels: Iterable[np.uint8]) -> 'FrameData':
-        return cls(''.join(map(lambda x: hex(x)[-1], labels)))
+@njit('u8(u8, u1[:], u8)')
+def read_byte(num: int, buffer: NDArray[np.uint8], buffer_pos: int) -> int:
+    count = num // 16 + 1
+    c = num % 16
+    buffer[buffer_pos:buffer_pos+count] = c
+    return buffer_pos + count
+
+@jitclass([('pixels', uint8[:])]) # type: ignore
+class FrameData:
+    def __init__(self, pixels: NDArray[np.uint8]):
+        self.pixels = pixels
+
+@njit
+def default_from_size(width: int, height: int) -> 'FrameData':
+    return FrameData(default(width, height))
+
+def read_from(file: BinaryIO, width: int, height: int, previous_frame_data: bytes) -> 'FrameData':
+    data = np.frombuffer(file.read(width * height), dtype=np.uint8)
+    data_pos = 0
+    buffer = np.empty_like(data)
+    buffer_pos = 0
+    while True:
+        buffer_pos = read_byte(data[data_pos], buffer, buffer_pos)
+        data_pos += 1
+        if buffer_pos == width * height:
+            break
+        elif buffer_pos > width * height:
+            raise ValueError('Too many pixels')
     
-    @classmethod
-    def default_from_size(cls, width: int, height: int) -> 'FrameData':
-        return cls('f' * width * height)
-    
-    def serialize(self) -> bytes:
-        return bytes(map(lambda c: int(c, 16), self.pixels))
-    
-    @classmethod
-    def read_from(cls, file: BinaryIO, width: int, height: int, previous_frame_data: bytes) -> 'FrameData':
-        res = b''
-        i = 0
-        while True:
-            s = file.read(1)
-            count = s[0] // 16 + 1
-            c = s[0] % 16
-            res += bytes([c] * count)
-            i += 1
-            if len(res) == width * height:
-                break
-            elif len(res) > width * height:
-                raise ValueError('Too many pixels')
-        res = xor(previous_frame_data, res)
-        return cls(''.join(map(lambda x: hex(x)[-1], res)))
+    file.seek(data_pos - width * height, 1)
+    previous_frame_data_arr = np.frombuffer(previous_frame_data, dtype=np.uint8)
+    res = xor(previous_frame_data_arr, buffer[:buffer_pos])
+    return FrameData(np.frombuffer(res, dtype=np.uint8))
+
+if __name__ == '__main__':
+    a = default_from_size(42,42)
+    b = default_from_size(42,42)
+
+    xor(a.pixels, b.pixels)

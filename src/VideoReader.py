@@ -1,7 +1,9 @@
-import cv2 as cv
 from typing import Optional
-from Video import Frame, Header
-from Video import Video
+
+import cv2 as cv
+
+from .Video import Frame, Header, Video
+
 
 class VideoReader:
     def __init__(self, filepath: str, output_width: int, output_height: int):
