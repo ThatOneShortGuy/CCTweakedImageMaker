@@ -31,8 +31,9 @@ def default_from_size(width: int, height: int) -> 'FrameData':
 
 def read_from(file: BinaryIO, width: int, height: int, previous_frame_data: bytes) -> 'FrameData':
     data = np.frombuffer(file.read(width * height), dtype=np.uint8)
+    previous_frame_data_arr = np.frombuffer(previous_frame_data, dtype=np.uint8)
+    buffer = np.empty_like(previous_frame_data_arr)
     data_pos = 0
-    buffer = np.empty_like(data)
     buffer_pos = 0
     while True:
         buffer_pos = read_byte(data[data_pos], buffer, buffer_pos)
@@ -43,7 +44,6 @@ def read_from(file: BinaryIO, width: int, height: int, previous_frame_data: byte
             raise ValueError('Too many pixels')
     
     file.seek(data_pos - width * height, 1)
-    previous_frame_data_arr = np.frombuffer(previous_frame_data, dtype=np.uint8)
     res = xor(previous_frame_data_arr, buffer[:buffer_pos])
     return FrameData(np.frombuffer(res, dtype=np.uint8))
 
